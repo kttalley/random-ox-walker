@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<script src="lib/p5.js"></script>
+    <script>
+
+        new p5();
+        function setup() {
+            angleMode(DEGREES);
+            createCanvas(displayWidth,displayHeight,WEBGL);
+            oxObj = loadModel('https://raw.githubusercontent.com/kttalley/Sculptris-Obj/master/lilOx.obj', true);
+
+        }
+
+        let oxObj;
+        let oxWalker = {
+            pos: createVector(0,0,0),
+            vel: createVector(0,0,0),
+            acc: createVector(-0.03,-0.2,0.5),
+            face: 20,
+            dice: 0,
+            update: function () {
+                this.dice = this.face*random(-0.1,0.1);
+                this.vel.add(this.acc);
+                this.pos.add(this.vel);
+                this.acc.rotate(-this.dice);
+                this.acc.mag(0.2);
+            },
+            draw: function () {
+                translate(this.pos.x-width/2,this.pos.y,this.pos.z);
+                //camera(this.pos.x,this.pos.y,this.pos.z);
+                rotateY(this.face+this.vel.x/100);
+                rotateX(280);
+                specularMaterial(170,170,190);
+                //pointLight(255,255,255,this.pos.x,this.pos.y,this.pos.z);
+                model(oxObj);
+                resetMatrix();
+            },
+            colide: function() {
+                if(this.pos.x > width){
+                    this.pos.x = width;
+                    this.vel.x = -this.vel.x;
+                    //this.face = 90;
+                }
+                if(this.pos.x < -1000){
+                    this.pos.x = -1000;
+                    this.vel.x = -this.vel.x;
+                    //this.face = 90;
+                }
+                if(this.pos.y > 100){
+                    this.pos.y = 100;
+                    this.vel.y = -this.vel.y;
+                    //this.face = 90;
+                }
+                if(this.pos.y < -200){
+                    this.pos.y = -200;
+                    //this.face = 90;
+                    this.vel.y = -this.vel.y;
+                }
+                if(this.pos.z > 500){
+                    this.pos.z = 500;
+                    this.vel.z = -this.vel.z;
+                    //this.face = 90;
+                }
+                if(this.pos.z < -5000){
+                    this.pos.z = -5000;
+                    //this.face = 90;
+                    this.vel.z = -this.vel.z;
+                }
+            },
+        };
+        const Ox = function () {
+            oxWalker.update();
+            oxWalker.colide();
+            oxWalker.draw();
+        };
+
+
+
+        let camX = mouseX;
+        let camY = mouseY;
+        let camZ = 3200;
+
+        let viewr1 = function(){
+            view1.fly();
+            view1.draw();
+        };
+        let view1 = {
+        pos: createVector(camX,camY,camZ),
+        acc: createVector(0,0,0),
+        vel: createVector(0,0,0),
+        fly: function() {
+            this.camX = mouseX -width/2;
+            this.camY= mouseY -height/2;
+            this.pos.add(this.vel);
+            this.vel.add(this.acc);
+            
+            if(keyIsDown(87)){
+                this.acc.z = -0.01;
+                
+            }
+            if(keyIsDown(83)){
+                this.acc.z = 0.01;
+                
+            }
+        },
+        draw: function () {
+            pointLight(100,50,255,100,this.pos.x,this.pos.y,this.pos.z);
+            camera(mouseX-width/2 * 0.5,mouseY-height/2 * 0.5,this.pos.z);    
+        },
+        
+        };
+        function draw() {
+            //background
+            background(100,200,255);
+            translate(200,-1200,-7000);
+            rotateY(frameCount*0.01);
+            pointLight(255,255,100,100,200,1200,-2000);
+            ambientMaterial(255,255,50,50);
+            sphere(1000+oxWalker.pos.x/1000);
+            ambientMaterial(255,255,250,100);
+            sphere(850+oxWalker.pos.x/1000);
+            ambientMaterial(255,255,1000,155);
+            sphere(450*oxWalker.pos.x/1000);
+            resetMatrix();
+            translate(-1000,1400,-1000);
+            viewr1();
+            rotateX(-20);
+            ambientMaterial(100,255,200);
+            box(4000,2000,3000);
+            resetMatrix();
+            viewr1();
+
+            Ox();
+        }
+    </script>
+</html>
