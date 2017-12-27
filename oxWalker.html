@@ -92,9 +92,10 @@
             draw: function () {
                 translate(this.pos.x-width/2,this.pos.y,this.pos.z);
                 //camera(this.pos.x,this.pos.y,this.pos.z);
-                rotateY(this.face);
-                rotateX(this.face+this.vel.z/100);
-                specularMaterial(270,170,290);
+                rotateX(this.face*2+this.vel.z/100);
+                rotateY(280);
+                rotateZ(100);
+                specularMaterial(255,255,0);
                 //pointLight(255,255,255,this.pos.x,this.pos.y,this.pos.z);
                 model(birdObj);
                 resetMatrix();
@@ -110,8 +111,8 @@
                     this.vel.x = -this.vel.x;
                     //this.face = 90;
                 }
-                if(this.pos.y > 0){
-                    this.pos.y = 0;
+                if(this.pos.y > -100){
+                    this.pos.y = -100;
                     this.vel.y = -this.vel.y;
                     //this.face = 90;
                 }
@@ -125,8 +126,8 @@
                     this.vel.z = -this.vel.z;
                     //this.face = 90;
                 }
-                if(this.pos.z < -4500){
-                    this.pos.z = -4500;
+                if(this.pos.z < -3500){
+                    this.pos.z = -3500;
                     //this.face = 90;
                     this.vel.z = -this.vel.z;
                 }
@@ -182,6 +183,7 @@
         };
         function draw() {
             //background
+            push();
             background(100,200,255);
             translate(200,-1200,-7000);
             rotateY(frameCount*0.01);
@@ -193,18 +195,22 @@
             ambientMaterial(255,255,1000,155);
             sphere(450*oxWalker.pos.x/1000);
             resetMatrix();
-            translate(-1000,1400,-1000);
+            translate(-1000,250,-1000);
             viewr1();
             rotateX(-20);
             ambientMaterial(100,255,200);
-            box(4000,2000,3000);
+            box(8000,8000,200);
             resetMatrix();
             viewr1();
         
             Ox();
+            pop();
             resetMatrix();
-            viewr1();
+            push();
+            pointLight(birdWalker.pos.x,birdWalker.pos.y,birdWalker.pos.z,camX,camY,camZ);
+            camera(mouseX-width/2 * 0.5,mouseY-height/2 * 0.5,camZ); 
             Bird();
+            pop();
         }
     </script>
 </html>
