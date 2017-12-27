@@ -92,8 +92,8 @@
             draw: function () {
                 translate(this.pos.x-width/2,this.pos.y,this.pos.z);
                 //camera(this.pos.x,this.pos.y,this.pos.z);
-                rotateY(this.face+this.vel.z/100);
-                //rotateX(280);
+                rotateY(this.face);
+                rotateX(this.face+this.vel.z/100);
                 specularMaterial(270,170,290);
                 //pointLight(255,255,255,this.pos.x,this.pos.y,this.pos.z);
                 model(birdObj);
